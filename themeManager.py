@@ -55,7 +55,12 @@ DARK_THEME = {
 
     #testing colors
     "red4test":     "red",  # Χρώμα για δοκιμές
-    "blue4test":    "blue"  # Χρώμα για δοκιμές
+    "blue4test":    "blue",  # Χρώμα για δοκιμές
+
+    # Ρυθμίσεις για Animations
+    "animation_hover": "#444444",
+    "animation_duration": 300,
+    "animation_transition": "ease-in-out",
 
 }
 

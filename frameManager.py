@@ -52,7 +52,7 @@ from standardCalc import StandardCalculator      # Εισαγωγή της κλ�
 from scientificCalc import ScientificCalculator  # Εισαγωγή της κλάσης για την Scientific λειτουργία
 from currencyConverter import CurrencyConverter  # Εισαγωγή της κλάσης για τη λειτουργία μετατροπής νομισμάτων
 from numberConverter import NumberBaseConverter  # Εισαγωγή της κλάσης για τη λειτουργία μετατροπής αριθμών
-
+from zodiacFrame import ZodiacFrame
 
 #==================== ΛΕΞΙΚΟ frame_data ====================
 """
@@ -98,5 +98,10 @@ frame_data = {                                # Ορισμός του λεξικ
     "Number Converter": {                     # Ενότητα για τη λειτουργία μετατροπής αριθμών
         "frame":     NumberBaseConverter,     # Κλάση που αντιπροσωπεύει το frame της λειτουργίας μετατροπής αριθμών
         "icon_path": "images/converter.png",  # Διαδρομή του εικονιδίου για τη λειτουργία μετατροπής αριθμών
+    },
+
+    "Zodiac": {  # Ενότητα για τη λειτουργία μετατροπής αριθμών
+        "frame": ZodiacFrame,  # Κλάση που αντιπροσωπεύει το frame της λειτουργίας μετατροπής αριθμών
+        "icon_path": "images/bullet.png",  # Διαδρομή του εικονιδίου για τη λειτουργία μετατροπής αριθμών
     },
 }
