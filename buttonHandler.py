@@ -50,12 +50,12 @@ def on_button_click(calculator, value):
 
     # Εναλλαγή λειτουργίας "2nd"
     if value == "2nd":
-        toggle_second_function(calculator)
+        calculator.toggle_second_function()
         return
 
     # Εναλλαγή γωνιακής μονάδας (Rad/Deg)
     if value in ["Rad", "Deg"]:
-        toggle_angle_mode(calculator)
+        calculator.toggle_angle_mode()
         return
 
     # Διαγραφή τελευταίου χαρακτήρα (C)
@@ -169,7 +169,7 @@ def on_button_click(calculator, value):
                 calculator.display_var.set(new_expr)        # Ενημέρωση display με νέα έκφραση
             except Exception:               # Αν υπάρξει σφάλμα κατά την αξιολόγηση
                 calculator.display_var.set("Error") # Ενημέρωση display με "Error"
-        else:   # Αν δεν βρεθεί αντιστοίχιση
+        else:   # Αν δε βρεθεί αντιστοίχιση
             try:    # Προσπάθεια αξιολόγησης της τρέχουσας έκφρασης ως ποσοστό
                 num = evaluate_expression(calculator, prepare_expression(calculator, expr)) # Αξιολόγηση της τρέχουσας έκφρασης
                 result = num / mpf("100")   # Υπολογισμός του ποσοστού
@@ -244,36 +244,7 @@ def on_button_click(calculator, value):
         calculator.middle_display.configure(text="")    # Επαναφορά ενδιάμεσης οθόνης
 
 
-def toggle_angle_mode(calculator):  
-    # Αντιστρέφει τη μεταβλητή που δείχνει αν είμαστε σε μοίρες ή ακτίνια
-    calculator.is_degree = not calculator.is_degree
-    # Επιλέγει το νέο mode ("Deg" ή "Rad") ανάλογα με την τιμή της is_degree
-    new_mode = "Deg" if calculator.is_degree else "Rad"
-    # Ενημερώνει το κείμενο και τα χρώματα του πρώτου κουμπιού στην πάνω σειρά
-    calculator.top_button_objects[0][1].configure(
-        text=new_mode,
-        fg_color=calculator.theme["common_button_fg"],
-        hover_color=calculator.theme["common_button_hover"]
-    )
-    # Ενημερώνει την ετικέτα που δείχνει το mode γωνίας
-    calculator.angle_mode_label.configure(text=new_mode)
 
-def toggle_second_function(calculator):
-    # Αντιστρέφει τη μεταβλητή που δείχνει αν είναι ενεργή η "δεύτερη λειτουργία"
-    calculator.is_second_function = not calculator.is_second_function
-    # Για κάθε κουμπί στην πάνω σειρά
-    for row in calculator.top_button_objects:
-        for btn in row:
-            # Παίρνει το τρέχον κείμενο του κουμπιού
-            text = btn.cget("text")
-            if calculator.is_second_function:
-                # Αν υπάρχει στο second_map, αλλάζει το κείμενο στη δεύτερη λειτουργία
-                if text in calculator.second_map:
-                    btn.configure(text=calculator.second_map[text])
-            else:
-                # Αν υπάρχει στο first_map, επαναφέρει το κείμενο στην πρώτη λειτουργία
-                if text in calculator.first_map:
-                    btn.configure(text=calculator.first_map[text])
 
 def backspace(calculator):
     # Παίρνει την τρέχουσα έκφραση από το display
