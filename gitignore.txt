@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+.vscode/
+.idea/
+.DS_Store
+*.bak
+*.swp
+.venv/
+scientificCalculator.zip
+documentation.py
+INSTALLATION_GUIDE.txt
+ScientificCalculator_Team02.zip
+ScientificCalculator_01/

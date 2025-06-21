@@ -1,0 +1,6 @@
+customtkinter
+requests
+pygame
+mpmath
+Pillow
+tkhtmlview
