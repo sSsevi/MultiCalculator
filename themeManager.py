@@ -15,7 +15,7 @@ DARK_THEME = {
     "slide_menu_bg":    "#222222",  # Background του slide menu
     "inner_frame_bg":   "#222222",  # Background του inner frame του slide menu
     "display_bg":       "#000000",  # Background του display
-    "angle_mode_bg":    "#000000",  # Background του angle mode (εντος τού display)
+    "angle_mode_bg":    "#000000",  # Background του angle mode (εντός τού display)
     "dropdown_fg":      "#4f4f4f",  # Background του dropdown menu
     "entry_fg":         "#ffffff",  # Background του entry field (π.χ. για το Currency Converter)
 
@@ -26,7 +26,6 @@ DARK_THEME = {
     "menu_button_bg":   "#eb7c16",  # Background του menu button
     "manual_button_bg": "#000000",  # Χρώμα background του manual button
     "special_button_fg":"#eb7c16",  # Χρώμα background για τα ειδικά κουμπιά, 2nd, Rad, Deg
-
 
     #χρώμα των κειμένων
     "top_button_text":      "#ffffff",  # Χρώμα κειμένου των top buttons
@@ -52,6 +51,17 @@ DARK_THEME = {
     "hover_manual_button":  "#000000",  # Χρώμα hover για το manual button
     "menu_button_hover":    "#d06c11",  # Χρώμα hover του menu button
     "special_button_hover": "#f39c12",  # Χρώμα hover για τα ειδικά κουμπιά, 2nd, Rad, Deg
+
+    # Pop-up History
+    "popup_history_bg":                 "#222222",  # Φόντο παραθύρου ιστορικού
+    "popup_history_border":             "#4f4f4f",  # Χρώμα περιγράμματος (border) παραθύρου
+    "popup_history_border_width": 1,  # Πάχος περιγράμματος (border width)
+    "popup_history_fg":                 "#333333",  # Φόντο scrollable περιοχής
+    "popup_history_scrollbar_bg":       "#222222",  # Χρώμα φόντου scrollbar
+    "popup_history_scrollbar_thumb":    "#4f4f4f",  # Χρώμα "χειρολαβής" (thumb) του scrollbar
+    "popup_history_line_bg":            "#333333",  # Φόντο κουμπιού για κάθε entry
+    "popup_history_hover":              "#4f4f4f",  # Hover χρώμα κάθε κουμπιού ιστορικού
+    "popup_history_text":               "#ffffff",  # Χρώμα κειμένου στα κουμπιά ιστορικού
 
     #testing colors
     "red4test":     "red",  # Χρώμα για δοκιμές
@@ -172,7 +182,7 @@ PURPLE_THEME = {
 # Ορισμοί για το Oceanic Theme
 # ---------------------------------------------------------------------------
 OCEANIC_THEME = {
-    "background":           "#1b2b34",  # Σκούρο γαλαζογκρί (φόντο εφαρμογής)
+    "background":           "#1b2b34",  # Σκούρο γαλάζιο-γκρί (φόντο εφαρμογής)
     "display_bg":           "#0f1c22",  # Πολύ σκούρο μπλε (οθόνη)
     "angle_mode_bg":        "#0f1c22",  # Φόντο για το angle mode (εντός οθόνης)
     "top_frame_bg":         "#1b2b34",  # Φόντο του πάνω πλαισίου
@@ -184,7 +194,7 @@ OCEANIC_THEME = {
 
     "top_button_bg":        "#4c6473",  # Ψυχρό μπλε για λειτουργίες
     "num_button_bg":        "#78a0b4",  # Πιο φωτεινό μπλε για αριθμούς
-    "op_button_bg":         "#3d5c69",  # Ήπιο γκριζομπλέ για πράξεις
+    "op_button_bg":         "#3d5c69",  # Ήπιο γκρίζο-μπλέ για πράξεις
     "ac_button_bg":         "#00bcd4",  # Έντονο κυανό για AC/C
 
     "top_button_text":      "#ffffff",  # Χρώμα κειμένου των top buttons
@@ -383,7 +393,7 @@ RAINBOW_THEME = {
 }
 
 EXCEL_2003_THEME = {
-    "background":           "#C0DCC0",  # Νεκροζωντανό πράσινο γραφείου
+    "background":           "#C0DCC0",  # Νεκροζώντανο πράσινο γραφείου
     "top_frame_bg":         "#C0DCC0",  # Λίγο πιο σκούρο για διαχωρισμό
     "bottom_frame_bg":      "#C0DCC0",  # Ίδιο με το background
     "display_bg":           "#FFFFFF",  # Οθόνη = ξύλινο λευκό
@@ -472,26 +482,42 @@ WIN95_ERROR_THEME = {
 }
 
 
+
+
 # ---------------------------------------------------------------------------
-# Συνάρτηση για επιλογή του θέματος
+# Λεξικό που αντιστοιχίζει τα ονόματα θεμάτων στα αντίστοιχα λεξικά χρωμάτων
+# καθολικά προσβάσιμο.
 # ---------------------------------------------------------------------------
+THEMES = {
+    "dark": DARK_THEME,
+    "light": LIGHT_THEME,
+    "purple": PURPLE_THEME,
+    "oceanic": OCEANIC_THEME,
+    "goth": GOTH_THEME,
+    "mondrian": MONDRIAN_THEME,
+    "rainbow": RAINBOW_THEME,
+    "windows95": WIN95_ERROR_THEME,
+    "excel2003": EXCEL_2003_THEME,
+}
+
+
 def get_theme(mode="dark"):
     """
     Επιστρέφει το αντίστοιχο λεξικό θέματος.
 
-    :param mode: Το όνομα του θέματος ("dark", "light", "purple", "oceanic", "goth", "mondrian", "rainbow", "windows95", "excel2003")
+    :param mode: Το όνομα του θέματος (π.χ. "dark", "light").
     :return: Λεξικό με τους ορισμούς χρωμάτων για το θέμα.
+             Επιστρέφει το DARK_THEME ως default αν το `mode` δε βρεθεί.
     """
-    # Λεξικό που αντιστοιχίζει τα ονόματα θεμάτων στα αντίστοιχα λεξικά χρωμάτων
-    themes = {
-        "dark":      DARK_THEME,
-        "light":     LIGHT_THEME,
-        "purple":    PURPLE_THEME,
-        "oceanic":   OCEANIC_THEME,
-        "goth":      GOTH_THEME,
-        "mondrian":  MONDRIAN_THEME,
-        "rainbow":   RAINBOW_THEME,
-        "windows95": WIN95_ERROR_THEME,
-        "excel2003": EXCEL_2003_THEME,
-    }
-    return themes.get(mode.lower(), DARK_THEME) 
+    return THEMES.get(mode.lower(), DARK_THEME)
+
+
+def get_all_theme_names():
+    """
+    Επιστρέφει μια λίστα με όλα τα διαθέσιμα ονόματα θεμάτων.
+    Διαβάζει τα ονόματα δυναμικά από το λεξικό THEMES.
+
+    :return: Μια λίστα με τα ονόματα των θεμάτων (strings).
+    """
+    return list(THEMES.keys())
+

@@ -16,8 +16,7 @@
 import customtkinter  # Βιβλιοθήκη για μοντέρνο GUI
 from PIL import Image  # Χρήση εικόνων για εικονίδια
 from standardCalc import StandardCalculator  # Το default mode της αριθμομηχανής
-from themeManager import get_theme  # Διαχείριση θεμάτων εμφάνισης
-from customtkinter import CTkLabel  # Ετικέτες για το GUI
+from themeManager import get_theme, get_all_theme_names  # Διαχείριση θεμάτων εμφάνισης
 from frameManager import frame_data  # Διαθέσιμα modes/frames για την αριθμομηχανή
 import os  # Χρήση για έλεγχο ύπαρξης αρχείων
 
@@ -37,7 +36,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
         - Ορίζει τις διαστάσεις του παραθύρου και συνδέει handlers για πληκτρολόγιο και click εκτός μενού.
         - Αρχικοποιεί μεταβλητές κατάστασης για τον ήχο, το θέμα, το mode, το πλαϊνό μενού και το display.
         - Φορτώνει εικόνες για τα κουμπιά (ήχος, μενού, κλείσιμο, bullet) με έλεγχο ύπαρξης αρχείων.
-        - Δημιουργεί την πάνω μπάρα με κουμπί μενού, ετικέτα mode και κουμπί ήχου.
+        - Δημιουργίζει την πάνω μπάρα με κουμπί μενού, ετικέτα mode και κουμπί ήχου.
         - Δημιουργεί το πλαϊνό μενού (sidebar) και το εσωτερικό του frame.
         - Προσθέτει ενότητα επιλογής mode με κουμπιά για κάθε διαθέσιμο mode και τα αντίστοιχα εικονίδια.
         - Προσθέτει ενότητα επιλογής θέματος με κουμπιά για κάθε διαθέσιμο θέμα.
@@ -63,6 +62,9 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
         self.theme_buttons   = {}                     # Λεξικό για τα κουμπιά θεμάτων
         self.mode_buttons    = {}                     # Λεξικό για τα κουμπιά modes
         self.mode_icons      = {}                     # Λεξικό για τα εικονίδια modes
+
+        # Αρχικοποίηση του self.theme
+        self.theme = get_theme(self.theme_mode) # <--- ΝΕΑ ΓΡΑΜΜΗ: Αποθηκεύουμε το λεξικό του θέματος
 
         #==================== ΦΟΡΤΩΣΗ ΕΙΚΟΝΩΝ ====================
         sound_on_path = "images/sound_on.png"
@@ -90,7 +92,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
             self.close_icon = customtkinter.CTkImage(light_image=Image.open(close_icon_path), size=(24, 24))
         else:
             print(f"Warning: Image file '{close_icon_path}' not found.")
-            self.close_icon = None  
+            self.close_icon = None
 
         bullet_icon_path = "images/bullet.png"
         if os.path.exists(bullet_icon_path):
@@ -111,7 +113,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
             height=40,                                  # Ύψος κουμπιού
             image=self.menu_icon_img,                   # Εικόνα εικονιδίου μενού
             command=self.toggle_menu,                   # Συνάρτηση που καλείται όταν πατηθεί το κουμπί
-            fg_color=get_theme(self.theme_mode)["top_frame_bg"],    # Χρώμα φόντου κουμπιού (ανάλογα με το θέμα)
+            fg_color=self.theme.get("top_frame_bg", "#3c3c3c"),    # Χρήση self.theme
             corner_radius=6)                            # Στρογγυλοποίηση γωνιών κουμπιού
         self.menu_button.pack(side="left", padx=5)      # Τοποθέτηση αριστερά στην πάνω μπάρα με εσωτερικό περιθώριο
 
@@ -120,7 +122,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
             self.top_bar_frame,
             text="Standard Calculator",
             font=("Arial", 16),
-            text_color=get_theme(self.theme_mode)["menu_text_color"]
+            text_color=self.theme.get("menu_text_color", "#ffffff") # Χρήση self.theme
         )
         self.mode_label_display.pack(side="left", padx=10)
 
@@ -132,7 +134,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
             width=40,
             height=40,
             command=self.toggle_sound,
-            fg_color=get_theme(self.theme_mode)["top_frame_bg"]     # Το χρώμα φόντου του κουμπιού που ανοίγει/κλείνει το μενού
+            fg_color=self.theme.get("top_frame_bg", "#3c3c3c")     # Χρήση self.theme
         )
         self.sound_button.pack(side="right", padx=5)
 
@@ -140,7 +142,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
         self.sidebar_frame = customtkinter.CTkFrame(
             self, width=200, height=560,
             corner_radius=0,
-            fg_color=get_theme(self.theme_mode)["top_frame_bg"] # το χρώμα του πλαϊνού μενού (ιδανικά ίδιο με το top_frame)
+            fg_color=self.theme.get("slide_menu_bg", "#3c3c3c") # Χρήση self.theme
         )
         self.sidebar_frame.pack_propagate(False)
         self.sidebar_frame.place(x=-200, y=40)
@@ -171,8 +173,8 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
                 anchor="w",
                 compound="left",
                 command=lambda m=mode: self.set_mode_button(m),
-                fg_color=get_theme(self.theme_mode)["top_button_bg"],
-                text_color=get_theme(self.theme_mode)["menu_text_color"]
+                fg_color=self.theme.get("top_button_bg", "#3c3c3c"), # Χρήση self.theme
+                text_color=self.theme.get("menu_text_color", "#ffffff") # Χρήση self.theme
             )
             btn.pack(pady=2, padx=2, anchor="w", fill="x")
             self.mode_buttons[mode] = btn
@@ -182,7 +184,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
         self.theme_label.pack(anchor="w", pady=(10, 2))
 
         # Κουμπιά επιλογής θέματος εμφάνισης
-        for theme in ["dark", "light", "purple", "oceanic", "goth", "mondrian", "rainbow", "windows95", "excel2003"]:
+        for theme in get_all_theme_names():
             btn = customtkinter.CTkButton(
                 self.menu_inner_frame,
                 text=theme.capitalize(),
@@ -193,7 +195,6 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
                 width=180,
                 height=28,
                 font=("Arial", 12),
-
                 command=lambda t=theme: self.set_theme_button(t)
             )
             btn.pack(pady=2, padx=2, anchor="w")
@@ -211,42 +212,43 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
     # Ορισμός του επιλεγμένου θέματος
     def set_theme_button(self, theme):
         self.switch_theme(theme)
+        self.theme = get_theme(self.theme_mode) # <--- ΝΕΑ ΓΡΑΜΜΗ: Ενημερώνουμε το self.theme
 
         # Ανανέωση κουμπιών επιλογής θέματος (Theme buttons)
         for k, b in self.theme_buttons.items():
             b.configure(
-                fg_color=get_theme(self.theme_mode)["inner_frame_bg"],
-                hover_color=get_theme(self.theme_mode)["special_button_fg"],
-                text_color=get_theme(self.theme_mode)["menu_text_color"]
+                fg_color=self.theme.get("inner_frame_bg", "#4a4a4a"), # Χρήση self.theme
+                hover_color=self.theme.get("special_button_fg", "#5e5e5e"), # Χρήση self.theme
+                text_color=self.theme.get("menu_text_color", "#ffffff") #
             )
         if theme in self.theme_buttons:
             self.theme_buttons[theme].configure(
-                fg_color=get_theme(self.theme_mode)["special_button_fg"]
+                fg_color=self.theme.get("special_button_fg", "#5e5e5e") # Χρήση self.theme
             )
 
         # Ανανέωση πλαϊνού μενού
-        self.sidebar_frame.configure(fg_color=get_theme(self.theme_mode)["slide_menu_bg"])
-        self.menu_inner_frame.configure(fg_color=get_theme(self.theme_mode)["inner_frame_bg"])
-        self.top_bar_frame.configure(fg_color=get_theme(self.theme_mode)["background"])
+        self.sidebar_frame.configure(fg_color=self.theme.get("slide_menu_bg", "#3c3c3c")) # Χρήση self.theme
+        self.menu_inner_frame.configure(fg_color=self.theme.get("inner_frame_bg", "#4a4a4a")) # Χρήση self.theme
+        self.top_bar_frame.configure(fg_color=self.theme.get("background", "#2c2c2c")) # Χρήση self.theme
 
         # Κουμπί μενού
         self.menu_button.configure(
-            fg_color=get_theme(self.theme_mode)["top_frame_bg"],
-            hover_color=get_theme(self.theme_mode)["top_button_hover"]
+            fg_color=self.theme.get("top_frame_bg", "#3c3c3c"), # Χρήση self.theme
+            hover_color=self.theme.get("top_button_hover", "#4a4a4a") # Χρήση self.theme
         )
 
         # Κουμπί ήχου
         self.sound_button.configure(
-            fg_color=get_theme(self.theme_mode)["top_frame_bg"],
-            hover_color=get_theme(self.theme_mode)["top_button_hover"]
+            fg_color=self.theme.get("top_frame_bg", "#3c3c3c"), # Χρήση self.theme
+            hover_color=self.theme.get("top_button_hover", "#4a4a4a") # Χρήση self.theme
         )
 
         # Ετικέτες "Mode" και "Theme"
-        self.section_label.configure(text_color=get_theme(self.theme_mode)["menu_text_color"])
-        self.theme_label.configure(text_color=get_theme(self.theme_mode)["menu_text_color"])
+        self.section_label.configure(text_color=self.theme.get("menu_text_color", "#ffffff")) # Χρήση self.theme
+        self.theme_label.configure(text_color=self.theme.get("menu_text_color", "#ffffff")) # Χρήση self.theme
 
         # Ετικέτα επάνω μπάρας (π.χ. "Standard Calculator")
-        self.mode_label_display.configure(text_color=get_theme(self.theme_mode)["menu_text_color"])
+        self.mode_label_display.configure(text_color=self.theme.get("menu_text_color", "#ffffff")) # Χρήση self.theme
 
         # Επαναφορά των κουμπιών λειτουργιών (Standard, Scientific κ.λπ.) για να πάρουν σωστό χρώμα
         self.set_mode_button(self.current_mode)
@@ -254,12 +256,12 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
     #==================== ΕΝΑΛΛΑΓΗ MODE ====================
     def set_mode_button(self, mode):
         for k, b in self.mode_buttons.items():
-            b.configure(fg_color=get_theme(self.theme_mode)["inner_frame_bg"],          # το χρώμα bg των κουμπιών του μενού για την επιλογή mode, ιδανικά ίδιο με το inner_frame
-                        hover_color=get_theme(self.theme_mode)["special_button_fg"],    # το hover χρώμα των κουμπιών του μενού για την επιλογή mode
-                        text_color = get_theme(self.theme_mode)["menu_text_color"]      # το χρώμα του κειμένου των κουμπιών του μενού για την επιλογή mode
+            b.configure(fg_color=self.theme.get("inner_frame_bg", "#4a4a4a"),          # Χρήση self.theme
+                        hover_color=self.theme.get("special_button_fg", "#5e5e5e"),    # Χρήση self.theme
+                        text_color = self.theme.get("menu_text_color", "#ffffff")      # Χρήση self.theme
                         )
         if mode in self.mode_buttons:
-            self.mode_buttons[mode].configure(fg_color=get_theme(self.theme_mode)["special_button_fg"])
+            self.mode_buttons[mode].configure(fg_color=self.theme.get("special_button_fg", "#5e5e5e")) # Χρήση self.theme
         self.switch_mode(mode)
 
     #==================== ΠΛΑΪΝΟ ΜΕΝΟΥ ====================
@@ -324,39 +326,42 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
         if self.calculator_frame:
             try:
                 self.display_value = self.calculator_frame.get_display_value()
-            except:
+            except Exception: # Πιο συγκεκριμένη εξαίρεση είναι καλύτερη, αλλά αφήνω Exception όπως ήταν στο αρχικό σου κώδικα.
                 self.display_value = ""
             self.calculator_frame.destroy()
 
-        theme = get_theme(self.theme_mode)
+        # Το theme περνιέται ως όρισμα στο FrameClass αν αυτό το υποστηρίζει.
+        # Δεν χρειάζεται να επαναλάβουμε το self.theme = get_theme(...) εδώ,
+        # καθώς το self.theme ενημερώνεται στο set_theme_button.
         FrameClass = frame_data.get(self.current_mode, {}).get("frame", StandardCalculator)
 
         try:
-            self.calculator_frame = FrameClass(self, theme=theme, sound_enabled=self.sound_enabled)
-        except TypeError:
+            self.calculator_frame = FrameClass(self, theme=self.theme, sound_enabled=self.sound_enabled) # Χρήση self.theme
+        except TypeError: # Αυτό το `except` είναι για την περίπτωση που το FrameClass δεν δέχεται 'theme' και 'sound_enabled' ως ορίσματα.
             self.calculator_frame = FrameClass(self)
 
         self.calculator_frame.pack(fill="both", expand=True)
 
         try:
             self.calculator_frame.set_display_value(self.display_value)
-        except:
+        except Exception: # Πιο συγκεκριμένη εξαίρεση είναι καλύτερη, αλλά αφήνω Exception όπως ήταν στο αρχικό σου κώδικα.
             pass
 
         self.sidebar_frame.lift()
         self.mode_label_display.configure(
             text=f"{self.current_mode.title()} Calculator",
-            text_color=get_theme(self.theme_mode)["menu_text_color"]
+            text_color=self.theme.get("menu_text_color", "#ffffff") # Χρήση self.theme
         )
 
     #==================== ΕΝΑΛΛΑΓΗ MODE ====================
-    def switch_mode(self, new_mode):        
+    def switch_mode(self, new_mode):
         self.current_mode = new_mode
         self.show_calculator_frame()
 
     #==================== ΕΝΑΛΛΑΓΗ ΘΕΜΑΤΟΣ ====================
     def switch_theme(self, new_theme):
         self.theme_mode = new_theme
+        # Η ενημέρωση του self.theme γίνεται μέσα στο set_theme_button που καλείται μετά.
         self.show_calculator_frame()
 
     #==================== ΕΝΑΛΛΑΓΗ ΗΧΟΥ ====================
@@ -378,5 +383,8 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
 
 #==================== ΕΚΚΙΝΗΣΗ ΕΦΑΡΜΟΓΗΣ ====================
 if __name__ == "__main__":
-    app = MainCalculatorApp()
-    app.mainloop()
+    try:
+        app = MainCalculatorApp()
+        app.mainloop()
+    except Exception as e:
+        print(f"Αναπάντεχο σφάλμα στην εφαρμογή: {e}")
