@@ -196,10 +196,10 @@ class CurrencyConverter(customtkinter.CTkFrame):    # Κλάση που υλοπ
                 self.exchange_rate_label.configure(text=rate_text)  # Ενημέρωση της ετικέτας ισοτιμίας με την ισοτιμία της μετατροπής
                 #--------------------------------------------------
             else:
-                self.result_value_label.configure(text="Conversion rate not found") # Αν δεν βρεθεί η ισοτιμία, ενημερώνουμε την ετικέτα αποτελέσματος
-                self.exchange_rate_label.configure(text="")                         # Αν δεν βρεθεί η ισοτιμία, καθαρίζουμε και την ετικέτα ισοτιμίας
+                self.result_value_label.configure(text="Conversion rate not found") # Αν δε βρεθεί η ισοτιμία, ενημερώνουμε την ετικέτα αποτελέσματος
+                self.exchange_rate_label.configure(text="")                         # Αν δε βρεθεί η ισοτιμία, καθαρίζουμε και την ετικέτα ισοτιμίας
 
-        except ValueError:  # Αν η είσοδος ποσού δεν είναι έγκυρη (π.χ. δεν είναι αριθμός)
+        except ValueError:  # Αν η είσοδος ποσού δεν είναι έγκυρη (π.χ. Δεν είναι αριθμός)
             self.result_value_label.configure(text="Invalid Amount")            # Ενημέρωση της ετικέτας αποτελέσματος με μήνυμα σφάλματος
             self.exchange_rate_label.configure(text="")                         # Αν δεν είναι έγκυρη η είσοδος ποσού, καθαρίζουμε και την ετικέτα ισοτιμίας
 
@@ -208,12 +208,12 @@ class CurrencyConverter(customtkinter.CTkFrame):    # Κλάση που υλοπ
             self.exchange_rate_label.configure(text="")                         # Αν υπάρχει σφάλμα κατά την κλήση στο API, καθαρίζουμε και την ετικέτα ισοτιμίας
     
     #=========== Interface Compatibility Methods ===========#
-    # Οι παρακάτω συναρτήσεις είναι απαραίτητες για να διατηρήσουμε τη συμβατότητα με το interface, αλλά δεν χρησιμοποιούνται σε αυτό το mode
+    # Οι παρακάτω συναρτήσεις είναι απαραίτητες για να διατηρήσουμε τη συμβατότητα με το interface, αλλά δε χρησιμοποιούνται σε αυτό το mode
     def get_display_value(self):
-        return ""  # Δεν χρειαζόμαστε τιμή display για αυτό το mode
+        return ""  # Δε χρειαζόμαστε τιμή display για αυτό το mode
 
-    def set_display_value(self, value): # Δεν χρειαζόμαστε τιμή display για αυτό το mode
-        pass  # Δεν χρειαζόμαστε τιμή display για αυτό το mode, την καλούμε μόνο για να διατηρήσουμε τη συμβατότητα με το interface
+    def set_display_value(self, value): # Δε χρειαζόμαστε τιμή display για αυτό το mode
+        pass  # Δε χρειαζόμαστε τιμή display για αυτό το mode, την καλούμε μόνο για να διατηρήσουμε τη συμβατότητα με το interface
 
     def handle_key_input(self, key):    # Διαχείριση εισόδου από το πληκτρολόγιο
         if key == "\x08":  # Backspace 
