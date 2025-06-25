@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 .idea/
+extraFiles/
+themeMatrix.zip
+scientificCalcPreview.py
+standardPreview.py

@@ -60,7 +60,7 @@ class HistoryWindowModule:
         self.history_window.configure(
             fg_color=self.theme.get("popup_history_bg", "#222222"),
             border_color=self.theme.get("popup_history_border", "#4f4f4f"),
-            border_width=self.theme.get("popup_history_border_width", 1)
+            border_width=1
         )
 
         # Δημιουργία scrollable frame με προσαρμοσμένα scrollbar colors

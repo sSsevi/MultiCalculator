@@ -4,6 +4,7 @@ themeManager.py
 Αυτό το module διαχειρίζεται τα θέματα χρωμάτων για την Επιστημονική Αριθμομηχανή.
 Ορίζονται τα θέματα για dark, light, purple, oceanic, mondrian, goth, μαζί με τις παραμέτρους τους.
 """
+import themeLoader
 
 # ---------------------------------------------------------------------------
 # Ορισμοί για το Dark Theme
@@ -55,7 +56,6 @@ DARK_THEME = {
     # Pop-up History
     "popup_history_bg":                 "#222222",  # Φόντο παραθύρου ιστορικού
     "popup_history_border":             "#4f4f4f",  # Χρώμα περιγράμματος (border) παραθύρου
-    "popup_history_border_width": 1,  # Πάχος περιγράμματος (border width)
     "popup_history_fg":                 "#333333",  # Φόντο scrollable περιοχής
     "popup_history_scrollbar_bg":       "#222222",  # Χρώμα φόντου scrollbar
     "popup_history_scrollbar_thumb":    "#4f4f4f",  # Χρώμα "χειρολαβής" (thumb) του scrollbar
@@ -63,10 +63,14 @@ DARK_THEME = {
     "popup_history_hover":              "#4f4f4f",  # Hover χρώμα κάθε κουμπιού ιστορικού
     "popup_history_text":               "#ffffff",  # Χρώμα κειμένου στα κουμπιά ιστορικού
 
-    #testing colors
-    "red4test":     "red",  # Χρώμα για δοκιμές
-    "blue4test":    "blue"  # Χρώμα για δοκιμές
+    "border_color":         "#222222",
+    "error_text":           "#eb0214",
 
+
+
+    "switch_fg": "#ffffff",
+    "switch_progress": "#ffffff",
+    "switch_text": "#ffffff"
 }
 
 # ---------------------------------------------------------------------------
@@ -114,6 +118,22 @@ LIGHT_THEME = {
 
     "special_button_fg":    "#ff6f00",  # Χρώμα background για τα ειδικά κουμπιά, 2nd, Rad, Deg
     "special_button_hover": "#ff8f00",  # Χρώμα hover για τα ειδικά κουμπιά, 2nd, Rad, Deg
+
+    "popup_history_text": "#1C1C1C",
+    "popup_history_fg": "#FFFFFF",
+    "popup_history_bg": "#EAEAEA",
+    "popup_history_hover": "#D6D6D6",
+    "popup_history_border": "#C0C0C0",
+    "popup_history_scrollbar_bg": "#F2F2F2",
+    "popup_history_scrollbar_thumb": "#B0B0B0",
+    "popup_history_line_bg": "#F9F9F9",
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
+    "switch_fg": "#ffffff",
+    "switch_progress": "#ffffff",
+    "switch_text": "#ffffff"
 }
 
 # ---------------------------------------------------------------------------
@@ -175,6 +195,23 @@ PURPLE_THEME = {
     "placeholder_text":     "#BEBEBE",   # Χρώμα placeholder (π.χ. για το Currency Converter)
     "text_input":           "#000000",   # Χρώμα κειμένου input field (π.χ. για το Currency Converter)
     "entry_fg":             "#ffffff",   # Φόντο entry field (π.χ. για το Currency Converter)
+
+    "popup_history_bg":                 "#F0E6F6",  # ίδιο με background του theme
+    "popup_history_border":             "#B06FC8",  # ίδιο με top_button_hover
+    "popup_history_fg":                 "#E8D8F0",  # πιο φωτεινό για το scrollable
+    "popup_history_scrollbar_bg":       "#F0E6F6",  # ίδιο με το bg
+    "popup_history_scrollbar_thumb":    "#B06FC8",  # ίδιο με το hover
+    "popup_history_line_bg":            "#D5B3E5",  # ίδιο με inner frame
+    "popup_history_hover":              "#C388DC",  # ίδιο με special_button_fg
+    "popup_history_text":               "#2C003B",  # ίδιο με menu_text_color
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
+
+    "switch_fg": "#ffffff",
+    "switch_progress": "#ffffff",
+    "switch_text": "#ffffff"
 }
 
 
@@ -230,7 +267,20 @@ OCEANIC_THEME = {
 
     "menu_button_bg":       "#1b2b34",  # Φόντο κουμπιού μενού
     "menu_button_hover":    "#cc0000",  # Hover κουμπιού μενού
-    "menu_text_color":      "#ffffff"   # Χρώμα κειμένου κουμπιού μενού
+    "menu_text_color":      "#ffffff",   # Χρώμα κειμένου κουμπιού μενού
+
+    "popup_history_bg": "#00303D",  # ίδιο με background
+    "popup_history_border": "#00CED1",  # ίδιο με top_button_hover
+    "popup_history_fg": "#004C5A",  # για το scrollable, λίγο πιο φωτεινό από bg
+    "popup_history_scrollbar_bg": "#00303D",  # ίδιο με το bg για ομοιομορφία
+    "popup_history_scrollbar_thumb": "#00CED1",  # ίδιο με το hover
+    "popup_history_line_bg": "#005E6E",  # ίδιο με inner frame
+    "popup_history_hover": "#00A1A9",  # ίδιο με special_button_fg
+    "popup_history_text": "#E0FFFF",  # ίδιο με menu_text_color (λευκό-γαλάζιο)
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
 }
 
 # ---------------------------------------------------------------------------
@@ -278,7 +328,23 @@ GOTH_THEME = {
 
     "menu_button_bg":        "#990000",  # Background του menu button
     "menu_button_hover":     "#cc0000",  # Χρώμα hover του menu button
-    "menu_text_color":       "#ffffff"   # Χρώμα κειμένου του menu button
+    "menu_text_color":       "#ffffff",   # Χρώμα κειμένου του menu button
+
+    "popup_history_bg": "#121212",  # ίδιο με background
+    "popup_history_border": "#8B00B0",  # ίδιο με special_button_fg (έντονο goth μοβ)
+    "popup_history_fg": "#1E1E1E",  # ίδιο με inner_frame_bg ή ελαφρώς φωτεινότερο
+    "popup_history_scrollbar_bg": "#121212",  # ίδιο με bg
+    "popup_history_scrollbar_thumb": "#8B00B0",  # ίδιο με border και hover
+    "popup_history_line_bg": "#2A2A2A",  # ίδιο με top_button_bg
+    "popup_history_hover": "#6A0080",  # ίδιο με top_button_hover ή λίγο πιο έντονο
+    "popup_history_text": "#F0F0F0",  # ίδιο με menu_text_color (λευκογκρί)
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
+    "switch_fg": "#ffffff",
+    "switch_progress": "#ffffff",
+    "switch_text": "#ffffff"
 }
 
 # ---------------------------------------------------------------------------
@@ -336,29 +402,46 @@ MONDRIAN_THEME = {
     "hover_manual_button":  "#f0f0f0",  # Ανοιχτό γκρι hover για manual button
     "menu_button_hover":    "#e0e0e0",  # Ανοιχτό γκρι hover για menu button
     "special_button_hover": "#ffd633",  # Ανοιχτό κίτρινο hover για ειδικά κουμπιά
+
+    "popup_history_bg": "#FFFFFF",  # απόλυτο λευκό background
+    "popup_history_border": "#000000",  # μαύρο έντονο περίγραμμα (Mondrian-style!)
+    "popup_history_fg": "#F5F5F5",  # ελαφρύ γκρι για το scrollable μέσα μέρος
+    "popup_history_scrollbar_bg": "#FFFFFF",  # ίδιο με background
+    "popup_history_scrollbar_thumb": "#000000",  # μαύρο — καθαρή αντίθεση
+    "popup_history_line_bg": "#FF0000",  # κόκκινο Mondrian για κάθε κουμπί
+    "popup_history_hover": "#0000FF",  # μπλε Mondrian για hover
+    "popup_history_text": "#000000",  # μαύρο κείμενο πάνω στο κόκκινο
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
+    "dropdown_fg": "#ffffff",
+    "switch_fg": "#ffffff",
+    "switch_progress": "#ffffff",
+    "switch_text": "#ffffff"
 }
 
 RAINBOW_THEME = {
     # ---------------------------------------------------------------------------
     # Backgrounds (εμφάνιση πλαισίων)
     # ---------------------------------------------------------------------------
-    "background":           "#FFD63A",   # Κίτρινο φόντο εφαρμογής
-    "top_frame_bg":         "#FFD63A",   # Κίτρινο φόντο πάνω πλαισίου
-    "bottom_frame_bg":      "#FFD63A",   # Κίτρινο φόντο κάτω πλαισίου
-    "display_bg":           "#6DE1D2",   # Τιρκουάζ φόντο οθόνης
-    "angle_mode_bg":        "#6DE1D2",   # Τιρκουάζ φόντο angle mode
-    "manual_button_bg":     "#6DE1D2",   # Τιρκουάζ φόντο κουμπιού manual
+    "background":           "#edb712",   # Κίτρινο φόντο εφαρμογής
+    "top_frame_bg":         "#edb712",   # Κίτρινο φόντο πάνω πλαισίου
+    "bottom_frame_bg":      "#ea7b02",   # Κίτρινο φόντο κάτω πλαισίου
+    "display_bg":           "#e17100",   # Τιρκουάζ φόντο οθόνης
+    "angle_mode_bg":        "#e17100",   # Τιρκουάζ φόντο angle mode
+    "manual_button_bg":     "#e17100",   # Τιρκουάζ φόντο κουμπιού manual
     "slide_menu_bg":        "#FFA955",   # Πορτοκαλί φόντο slide menu
     "inner_frame_bg":       "#FFA955",   # Πορτοκαλί φόντο εσωτερικού πλαισίου slide menu
 
     # ---------------------------------------------------------------------------
     # Button Backgrounds
     # ---------------------------------------------------------------------------
-    "top_button_bg":        "#FFA955",   # Πορτοκαλί φόντο top buttons
+    "top_button_bg":        "#e17100",   # Πορτοκαλί φόντο top buttons
     "num_button_bg":        "#ffffff",   # Λευκό φόντο κουμπιών αριθμών
     "op_button_bg":         "#FFA955",   # Πορτοκαλί φόντο κουμπιών πράξεων
     "ac_button_bg":         "#F75A5A",   # Κόκκινο φόντο κουμπιών AC/C
-    "menu_button_bg":       "#FFD63A",   # Κίτρινο φόντο κουμπιού μενού
+    "menu_button_bg":       "#edb712",   # Κίτρινο φόντο κουμπιού μενού
     "entry_fg":             "#ffffff",   # Λευκό φόντο entry field (π.χ. για το Currency Converter)
 
     # ---------------------------------------------------------------------------
@@ -368,10 +451,10 @@ RAINBOW_THEME = {
     "num_button_text":      "#000000",   # Μαύρο κείμενο στα κουμπιά αριθμών
     "op_button_text":       "#ffffff",   # Λευκό κείμενο στα κουμπιά πράξεων
     "ac_button_text":       "#ffffff",   # Λευκό κείμενο στα κουμπιά AC/C
-    "display_text":         "#000000",   # Μαύρο κείμενο στην οθόνη
+    "display_text":         "#ffffff",   # Μαύρο κείμενο στην οθόνη
     "angle_mode_text":      "#000000",   # Μαύρο κείμενο στο angle mode
-    "manual_button_text":   "#000000",   # Μαύρο κείμενο στο manual button
-    "menu_text_color":      "#ffffff",   # Λευκό κείμενο στο κουμπί μενού
+    "manual_button_text":   "#ffffff",   # Μαύρο κείμενο στο manual button
+    "menu_text_color":      "#000000",   # Λευκό κείμενο στο κουμπί μενού
     "special_button_fg":    "#F75A5A",   # Κόκκινο φόντο ειδικών κουμπιών
     "special_button_text":  "#FFFFFF",   # Λευκό κείμενο ειδικών κουμπιών
     "label_text":           "#ffffff",   # Λευκό κείμενο για ετικέτες (labels)
@@ -387,9 +470,26 @@ RAINBOW_THEME = {
     "num_hover":            "#e0e0e0",   # Ανοιχτό γκρι hover για αριθμούς
     "op_hover":             "#F75A5A",   # Κόκκινο hover για πράξεις
     "ac_hover":             "#FFA955",   # Πορτοκαλί hover για AC/C
-    "hover_manual_button":  "#b3f0e6",   # Ανοιχτό τιρκουάζ hover για manual button
+    "hover_manual_button":  "#e17100",   # Ανοιχτό τιρκουάζ hover για manual button
     "menu_button_hover":    "#FFA955",   # Πορτοκαλί hover για κουμπί μενού
     "special_button_hover": "#FFA955",   # Πορτοκαλί hover για ειδικά κουμπιά
+
+    "popup_history_bg": "#1E1E1E",  # σκουρόχρωμο φόντο για να κάνουν αντίθεση τα χρώματα
+    "popup_history_border": "#00FFFF",  # φωτεινή κυανή γραμμή (cyan όπως στο theme σου)
+    "popup_history_fg": "#2E2E2E",  # λίγο πιο φωτεινό γκρι για contrast με τα κουμπιά
+    "popup_history_scrollbar_bg": "#1E1E1E",  # ίδιο με το φόντο για να μη ξεχωρίζει
+    "popup_history_scrollbar_thumb": "#FF00FF",  # φούξια/μωβ – παιχνιδιάρικη νότα
+    "popup_history_line_bg": "#FF9900",  # πορτοκαλί για κάθε κουμπί
+    "popup_history_hover": "#FFFF00",  # κίτρινο για hover – flare alert!
+    "popup_history_text": "#FFFFFF",  # λευκό κείμενο για μέγιστη αντίθεση
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
+    "dropdown_fg": "#ffffff",
+    "switch_fg": "#ffffff",
+    "switch_progress": "#ffffff",
+    "switch_text": "#ffffff"
 }
 
 EXCEL_2003_THEME = {
@@ -435,6 +535,19 @@ EXCEL_2003_THEME = {
     "hover_manual_button":  "#C0DCC0",  # Πράσινο hover manual button
     "menu_button_hover":    "#A0A0A0",  # Ανοιχτό γκρι hover μενού
     "special_button_hover": "#B0B000",  # Κίτρινο-χακί hover ειδικών κουμπιών
+
+    "popup_history_bg": "#F5F5F5",  # πολύ ανοιχτό γκρι – σαν φύλλο Excel
+    "popup_history_border": "#C3D69B",  # πράσινο Excel-style περίγραμμα
+    "popup_history_fg": "#FFFFFF",  # λευκό εσωτερικό
+    "popup_history_scrollbar_bg": "#E5E5E5",  # ελαφρύ γκρι
+    "popup_history_scrollbar_thumb": "#B6D7A8",  # πράσινο pastel (Excel love)
+    "popup_history_line_bg": "#D9EAD3",  # απαλό πράσινο κουμπιών
+    "popup_history_hover": "#B6D7A8",  # λίγο πιο έντονο πράσινο για hover
+    "popup_history_text": "#000000",  # κλασικό μαύρο για αναγνωσιμότητα
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
 }
 WIN95_ERROR_THEME = {
     "background":           "#C3C3C3",  # Κλασικό γκρι
@@ -469,7 +582,7 @@ WIN95_ERROR_THEME = {
     "placeholder_text":     "#BEBEBE",  # Γκρι placeholder (π.χ. για το Currency Converter)
     "text_input":           "#000000",  # Μαύρο κείμενο input field (π.χ. για το Currency Converter)
 
-    # Hover 
+    # Hover
     "hover_default":        "#D9D9D9",  # Ανοιχτό γκρι hover γενικά
     "top_button_hover":     "#E0E0E0",  # Ανοιχτότερο γκρι hover top button
     "hover_special":        "#1E90FF",  # Electric blue hover ειδικών
@@ -479,16 +592,44 @@ WIN95_ERROR_THEME = {
     "hover_manual_button":  "#FFFFFF",  # Λευκό hover manual button
     "menu_button_hover":    "#1E90FF",  # Electric blue hover μενού
     "special_button_hover": "#A52A2A",  # Καφέ hover ειδικών κουμπιών
+
+    "popup_history_bg": "#C0C0C0",  # classic γκρι φόντο των παραθύρων
+    "popup_history_border": "#808080",  # πιο σκούρο γκρι για το περίγραμμα
+    "popup_history_fg": "#E0E0E0",  # ανοιχτό γκρι για το εσωτερικό
+    "popup_history_scrollbar_bg": "#C0C0C0",  # ίδιο με το φόντο
+    "popup_history_scrollbar_thumb": "#A0A0A0",  # ελαφρώς πιο σκούρο για thumb
+    "popup_history_line_bg": "#F0F0F0",  # σχεδόν λευκό για να μοιάζει με πλήκτρο
+    "popup_history_hover": "#D0D0D0",  # ελαφρύ hover effect
+    "popup_history_text": "#000000",  # μαύρο – all business
+
+    "border_color": "#800000",
+    "error_text": "#800000",
+
 }
 
 
-
-
 # ---------------------------------------------------------------------------
-# Λεξικό που αντιστοιχίζει τα ονόματα θεμάτων στα αντίστοιχα λεξικά χρωμάτων
-# καθολικά προσβάσιμο.
-# ---------------------------------------------------------------------------
-THEMES = {
+# Διαχείριση θεμάτων
+
+class ThemeManager:
+    def __init__(self):
+        self.reload_themes()
+
+    def reload_themes(self):
+        self.matrix, self.headers = themeLoader.load_theme_matrix_from_csv()
+
+    def get_theme_names(self):
+        return self.headers[1:]
+
+def get_theme(theme_name):
+    matrix, fieldnames = themeLoader.load_theme_matrix_from_csv()
+    theme = {}
+    for row in matrix:
+        key = row["key"]
+        theme[key] = row.get(theme_name)
+    return theme
+
+FACTORY_THEMES = {
     "dark": DARK_THEME,
     "light": LIGHT_THEME,
     "purple": PURPLE_THEME,
@@ -500,24 +641,8 @@ THEMES = {
     "excel2003": EXCEL_2003_THEME,
 }
 
-
-def get_theme(mode="dark"):
-    """
-    Επιστρέφει το αντίστοιχο λεξικό θέματος.
-
-    :param mode: Το όνομα του θέματος (π.χ. "dark", "light").
-    :return: Λεξικό με τους ορισμούς χρωμάτων για το θέμα.
-             Επιστρέφει το DARK_THEME ως default αν το `mode` δε βρεθεί.
-    """
-    return THEMES.get(mode.lower(), DARK_THEME)
-
-
 def get_all_theme_names():
-    """
-    Επιστρέφει μια λίστα με όλα τα διαθέσιμα ονόματα θεμάτων.
-    Διαβάζει τα ονόματα δυναμικά από το λεξικό THEMES.
+    return list(FACTORY_THEMES.keys())
 
-    :return: Μια λίστα με τα ονόματα των θεμάτων (strings).
-    """
-    return list(THEMES.keys())
-
+def get_factory_theme(theme_name):
+    return FACTORY_THEMES.get(theme_name.lower(), DARK_THEME)

@@ -4,38 +4,36 @@ import csv
 import sys
 import os
 
-# Προσθέστε το φάκελο που περιέχει το themeManager.py στο PYTHONPATH
-# Αν το generate_theme_matrix_csv.py βρίσκεται στον ίδιο φάκελο με το themeManager.py,
-# τότε η παρακάτω γραμμή δεν είναι απαραίτητη.
-# Αν βρίσκεται σε υποφάκελο, ίσως χρειαστεί να προσαρμόσετε τη διαδρομή.
-# Παράδειγμα: sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import themeManager
 
 
 def generate_theme_matrix_csv(output_csv_file="themeMatrix.csv"):
     """
     Δημιουργεί το themeMatrix.csv από τα λεξικά θεμάτων του themeManager.
+    Τώρα διαβάζει δυναμικά τα διαθέσιμα θέματα.
 
     :param output_csv_file: Το όνομα του αρχείου CSV που θα δημιουργηθεί.
     """
 
-    # Συγκεντρώνουμε όλα τα θέματα από το themeManager.get_theme()
-    # Χρησιμοποιούμε ένα dummy mode για να αποκτήσουμε πρόσβαση στο λεξικό 'themes'
-    # χωρίς να χρειάζεται να καλέσουμε την get_theme για κάθε θέμα ξεχωριστά.
-    # Θα προσπελάσουμε απευθείας τα global λεξικά.
+    # ---------------------------------------------------------------------------
+    # Δυναμική φόρτωση όλων των θεμάτων
+    # Χρησιμοποιούμε την themeManager.get_all_theme_names()
+    # και τη themeManager.get_theme() για να διαβάσουμε δυναμικά τα θέματα.
+    # ---------------------------------------------------------------------------
+    all_themes_data = {}
+    try:
+        # Παίρνουμε όλα τα ονόματα των θεμάτων που είναι διαθέσιμα στο themeManager
+        theme_names_from_manager = themeManager.get_all_theme_names()
 
-    # Αυτό είναι το κεντρικό λεξικό που περιέχει όλα τα θέματα
-    all_themes_data = {
-        "dark": themeManager.DARK_THEME,
-        "light": themeManager.LIGHT_THEME,
-        "purple": themeManager.PURPLE_THEME,
-        "oceanic": themeManager.OCEANIC_THEME,
-        "goth": themeManager.GOTH_THEME,
-        "mondrian": themeManager.MONDRIAN_THEME,
-        "rainbow": themeManager.RAINBOW_THEME,
-        "windows95": themeManager.WIN95_ERROR_THEME,
-        "excel2003": themeManager.EXCEL_2003_THEME,
-    }
+        # Για κάθε όνομα θέματος, ανακτούμε το αντίστοιχο λεξικό με τα χρώματα
+        for theme_name in theme_names_from_manager:
+            all_themes_data[theme_name] = themeManager.get_theme(theme_name)
+    except Exception as e:
+        print(f"❌ Σφάλμα κατά τη δυναμική φόρτωση θεμάτων από το themeManager: {e}")
+        print("Παρακαλώ βεβαιωθείτε ότι το themeManager.py είναι προσβάσιμο και σωστό.")
+        return # Διακόπτουμε τη λειτουργία αν δεν μπορέσουμε να φορτώσουμε τα θέματα
+
 
     # 1. Συλλέγουμε όλα τα μοναδικά χρωματικά keys (π.χ. 'background', 'top_button_bg')
     all_keys = set()
@@ -45,7 +43,8 @@ def generate_theme_matrix_csv(output_csv_file="themeMatrix.csv"):
     # Τα ταξινομούμε για σταθερή σειρά στο CSV
     sorted_keys = sorted(list(all_keys))
 
-    # 2. Συλλέγουμε τα ονόματα των θεμάτων (π.χ. 'dark', 'light')
+    # 2. Συλλέγουμε τα ονόματα των θεμάτων (τώρα τα έχουμε ήδη από το themeManager.get_all_theme_names())
+    # Χρησιμοποιούμε την ίδια ταξινομημένη λίστα για να διασφαλίσουμε συνέπεια
     theme_names = sorted(list(all_themes_data.keys()))
 
     # 3. Ορίζουμε τις κεφαλίδες του CSV

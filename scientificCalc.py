@@ -90,7 +90,10 @@ class ScientificCalculator(customtkinter.CTkFrame):
         self.theme_mode = theme_mode
         # Αρχικοποιούμε το theme με το λεξικό που μας δόθηκε.
         # Η create_scientific_calculator το έχει ήδη φορτώσει.
-        self.theme = theme
+        if theme is not None:
+            self.theme = theme
+        else:
+            self.theme = get_theme("dark")
 
         # Έλεγχος ασφαλείας: Αν το παρεχόμενο 'theme' δεν είναι έγκυρο λεξικό
         if not isinstance(self.theme, dict):
@@ -123,7 +126,7 @@ class ScientificCalculator(customtkinter.CTkFrame):
 
         # ==========================================================
         # 6. ΚΑΤΑΣΚΕΥΗ ΚΑΙ ΕΦΑΡΜΟΓΗ UI
-        #    Δημιουργεί όλα τα γραφικά στοιχεία και εφαρμόζει
+        #    Δημιουργίζει όλα τα γραφικά στοιχεία και εφαρμόζει
         #    το τελικό αρχικό θέμα.
         # ==========================================================
         self.build_ui()  # Δημιουργεί όλα τα κουμπιά, display κλπ.
@@ -296,10 +299,22 @@ class ScientificCalculator(customtkinter.CTkFrame):
             (1, 0, "4", 1, "num"), (1, 1, "5", 1, "num"), (1, 2, "6", 1, "num"),
             (1, 3, "x", 1, "op"), (1, 4, "÷", 1, "op"),
             (2, 0, "1", 1, "num"), (2, 1, "2", 1, "num"), (2, 2, "3", 1, "num"),
+            (3, 0, "0", 1, "num"), (3, 1, ".", 1, "num"), (3, 2, "+/-", 1, "num"),
+            (3, 3, "+", 1, "op"), (3, 4, "-", 1, "op"),
+            (3, 3, "=", 2, "op") # Αυτό το "=" είναι διπλό, πρέπει να διορθωθεί
+        ]
+        # Διορθωμένο bottom_layout (αντικατέστησα το "=")
+        bottom_layout = [  # Διάταξη κουμπιών για το κάτω μέρος του υπολογιστή
+            (0, 0, "7", 1, "num"), (0, 1, "8", 1, "num"), (0, 2, "9", 1, "num"),
+            (0, 3, "C", 1, "c"), (0, 4, "AC", 1, "ac"),
+            (1, 0, "4", 1, "num"), (1, 1, "5", 1, "num"), (1, 2, "6", 1, "num"),
+            (1, 3, "x", 1, "op"), (1, 4, "÷", 1, "op"),
+            (2, 0, "1", 1, "num"), (2, 1, "2", 1, "num"), (2, 2, "3", 1, "num"),
             (2, 3, "+", 1, "op"), (2, 4, "-", 1, "op"),
             (3, 0, "0", 1, "num"), (3, 1, ".", 1, "num"), (3, 2, "+/-", 1, "num"),
-            (3, 3, "=", 2, "op")
+            (3, 3, "=", 2, "op") # Το "=" πρέπει να είναι στη θέση (3,3) με columnspan 2
         ]
+
 
         self.numeric_buttons = []  # Λίστα για αποθήκευση αριθμητικών κουμπιών
         self.operation_buttons = []  # Λίστα για αποθήκευση λειτουργικών κουμπιών (π.χ. +, -, ×, ÷)
@@ -352,7 +367,7 @@ class ScientificCalculator(customtkinter.CTkFrame):
                 # Κλήση της συνάρτησης για χειρισμό πατήματος κουμπιού
             )
             btn.grid(row=r, column=c, columnspan=cspan, padx=3, pady=3,
-                     sticky="ew")  # Τοποθετεί το κουμπί στο grid layout
+                     sticky="nsew")  # Τοποθετεί το κουμπί στο grid layout
             if btype == "num":  # Αν είναι αριθμητικό κουμπί
                 self.numeric_buttons.append(btn)  # Προσθέτει το κουμπί στη λίστα των αριθμητικών κουμπιών
             elif btype == "op":  # Αν είναι λειτουργικό κουμπί (π.χ. +, -, ×, ÷)
@@ -395,13 +410,18 @@ class ScientificCalculator(customtkinter.CTkFrame):
 
     def handle_key_input(self, key):  # Χειρισμός πληκτρολογίου για την αριθμομηχανή
         from keyboardInputHandler import handle_keyboard_input  # Εισάγει τη συνάρτηση χειρισμού πληκτρολογίου
-        handle_keyboard_input(key, self)  # Καλεί τη συνάρτηση με το κλειδί και το αντικείμενο της αριθμομηχανής
+        handle_keyboard_input(key, self)  # Καλέι τη συνάρτηση με το κλειδί και το αντικείμενο της αριθμομηχανής
 
     # -------------------------
     # ΕΦΑΡΜΟΓΗ ΘΕΜΑΤΟΣ
     # -------------------------
     def apply_theme(self, theme_dict):  # Εφαρμόζει το θέμα που παρέχεται ως λεξικό
         self.theme = theme_dict  # Αποθηκεύει το νέο θέμα στην ιδιότητα του αντικειμένου
+
+        print(f"Applying theme to ScientificCalculator: {self.theme_mode}")
+        print(f"Display BG for history/manual buttons: {theme_dict.get('display_bg', 'DEFAULT_DISPLAY_BG')}")
+        print(f"Manual Button BG for history/manual buttons: {theme_dict.get('manual_button_bg', 'DEFAULT_MANUAL_BUTTON_BG')}")
+
 
         # Εφαρμογή χρωμάτων φόντου σε όλα τα βασικά widgets με fallback
         self.configure(fg_color=theme_dict.get("background", "#222222"))
@@ -435,18 +455,24 @@ class ScientificCalculator(customtkinter.CTkFrame):
                 # Χρώμα κειμένου για την ένδειξη Rad/Deg, με fallback
             )
         if self.manual_button:
+            current_manual_fg = theme_dict.get("manual_button_bg", "#000000")
+            current_manual_text = theme_dict.get("manual_button_text", "#eb7c16")
+            current_manual_hover = theme_dict.get("hover_manual_button", "#000000")
+            print(f"Manual button will be configured with fg={current_manual_fg}, text={current_manual_text}, hover={current_manual_hover}")
             self.manual_button.configure(
-                fg_color=theme_dict.get("manual_button_bg", "#000000"),  # Χρώμα φόντου του κουμπιού manual, με fallback
-                text_color=theme_dict.get("manual_button_text", "#eb7c16"),
-                # Χρώμα κειμένου του κουμπιού manual, με fallback
-                hover_color=theme_dict.get("hover_manual_button", "#000000")
-                # Χρώμα hover του κουμπιού manual, με fallback
+                fg_color=current_manual_fg,  # Χρώμα φόντου του κουμπιού manual, με fallback
+                text_color=current_manual_text, # Χρώμα κειμένου του κουμπιού manual, με fallback
+                hover_color=current_manual_hover # Χρώμα hover του κουμπιού manual, με fallback
             )
         if self.history_button:
+            current_history_fg = theme_dict.get("manual_button_bg", "#000000")
+            current_history_text = theme_dict.get("manual_button_text", "#eb7c16")
+            current_history_hover = theme_dict.get("hover_manual_button", "#000000")
+            print(f"History button will be configured with fg={current_history_fg}, text={current_history_text}, hover={current_history_hover}")
             self.history_button.configure(
-                fg_color=theme_dict.get("manual_button_bg", "#000000"),
-                text_color=theme_dict.get("manual_button_text", "#eb7c16"),
-                hover_color=theme_dict.get("hover_manual_button", "#000000")
+                fg_color=current_history_fg,
+                text_color=current_history_text,
+                hover_color=current_history_hover
             )
 
         # Εφαρμογή χρωμάτων σε όλα τα top buttons
@@ -505,6 +531,9 @@ class ScientificCalculator(customtkinter.CTkFrame):
                 # Το χρώμα του κειμένου στο label για την ένδειξη Rad/Deg, με fallback
                 text=("Deg" if self.is_degree else "Rad")  # Ενημέρωση του κειμένου ανάλογα με την κατάσταση
             )
+        # ΝΕΑ ΠΡΟΣΘΗΚΗ ΕΔΩ: Ενημέρωση του παραθύρου ιστορικού
+        if self.history_handler:
+            self.history_handler.apply_theme(theme_dict)
 
     # -------------------------
     # ΕΠΙΛΟΓΕΣ ΣΥΜΠΕΡΙΦΟΡΑΣ ΚΟΥΜΠΙΩΝ
@@ -587,8 +616,6 @@ def create_scientific_calculator(parent, mode="scientific", theme_mode="dark", s
     theme = get_theme(theme_mode)
     # Επιστρέφει ένα νέο αντικείμενο ScientificCalculator με τα δοσμένα ορίσματα
     return ScientificCalculator(parent, mode=mode, theme=theme, sound_enabled=sound_enabled, theme_mode=theme_mode)
-
-
 
 
 # Δοκιμή αυτόνομης λειτουργίας αυτού του αρχείου

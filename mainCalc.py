@@ -17,20 +17,19 @@ import customtkinter  # Βιβλιοθήκη για μοντέρνο GUI
 from PIL import Image  # Χρήση εικόνων για εικονίδια
 from standardCalc import StandardCalculator  # Το default mode της αριθμομηχανής
 from themeManager import get_theme, get_all_theme_names  # Διαχείριση θεμάτων εμφάνισης
-from frameManager import frame_data  # Διαθέσιμα modes/frames για την αριθμομηχανή
 import os  # Χρήση για έλεγχο ύπαρξης αρχείων
-
+from frameManager import frame_data  # Διαχείριση των διαφορετικών frames της αριθμομηχανής
 #==================== ΑΡΧΙΚΕΣ ΡΥΘΜΙΣΕΙΣ ====================
 customtkinter.set_appearance_mode("dark")   # Ορίζουμε το dark mode ως αρχικό
 sound_enabled_global = True                 # Μεταβλητή για ενεργοποίηση/απενεργοποίηση ήχου
 
 # Συνάρτηση που επιστρέφει την κατάσταση του ήχου
-def get_sound_state():                      
+def get_sound_state():
     return sound_enabled_global             # Επιστρέφει την τρέχουσα κατάσταση του ήχου
 
 #==================== ΚΛΑΣΗ MainCalculatorApp ====================
 class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της εφαρμογής αριθμομηχανής
-    def __init__(self):                         # Constructor της κλάσης
+    def __init__(self, mode="standard", theme=None):                        # Constructor της κλάσης
         """
         Αρχικοποιεί το κύριο παράθυρο της εφαρμογής υπολογιστή με τις ακόλουθες λειτουργίες:
         - Ορίζει τις διαστάσεις του παραθύρου και συνδέει handlers για πληκτρολόγιο και click εκτός μενού.
@@ -55,7 +54,7 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
         global sound_enabled_global
         self.sound_enabled   = sound_enabled_global   # Κατάσταση ήχου
         self.theme_mode      = "dark"                 # Αρχικό θέμα εμφάνισης
-        self.current_mode    = "standard"             # Αρχικό mode
+        self.current_mode    = mode
         self.sidebar_open    = False                  # Κατάσταση πλαϊνού μενού (κλειστό)
         self.sidebar_x       = -200                   # Αρχική θέση πλαϊνού μενού
         self.display_value   = ""                     # Τιμή που εμφανίζεται στο display
@@ -64,7 +63,10 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
         self.mode_icons      = {}                     # Λεξικό για τα εικονίδια modes
 
         # Αρχικοποίηση του self.theme
-        self.theme = get_theme(self.theme_mode) # <--- ΝΕΑ ΓΡΑΜΜΗ: Αποθηκεύουμε το λεξικό του θέματος
+        if theme is not None:
+            self.theme = theme
+        else:
+            self.theme = get_theme(self.theme_mode)
 
         #==================== ΦΟΡΤΩΣΗ ΕΙΚΟΝΩΝ ====================
         sound_on_path = "images/sound_on.png"
@@ -137,6 +139,8 @@ class MainCalculatorApp(customtkinter.CTk):     # Κύρια κλάση της �
             fg_color=self.theme.get("top_frame_bg", "#3c3c3c")     # Χρήση self.theme
         )
         self.sound_button.pack(side="right", padx=5)
+
+
 
         #==================== ΠΛΑΪΝΟ ΜΕΝΟΥ ====================
         self.sidebar_frame = customtkinter.CTkFrame(

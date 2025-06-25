@@ -27,7 +27,10 @@ class StandardCalculator(customtkinter.CTkFrame):   # Κληρονομούμε �
 
         # Ορισμός των βασικών attributes του αντικειμένου:
         # Αν περαστεί θέμα, το χρησιμοποιούμε. Αλλιώς, παίρνουμε το "dark" θέμα ως προεπιλογή για τα χρώματα.
-        self.theme = theme or get_theme("dark")
+        if theme is not None:
+            self.theme = theme
+        else:
+            self.theme = get_theme("dark")
         # Το theme εδώ είναι ένα dictionary (λεξικό) με ονόματα και χρώματα (π.χ. "background": "#222222")
 
         self.display_var = customtkinter.StringVar(value="0")  # Το κείμενο που εμφανίζεται στο display
@@ -63,7 +66,7 @@ class StandardCalculator(customtkinter.CTkFrame):   # Κληρονομούμε �
         self.symbol_buttons = []        # Κουμπιά για συμβολικές λειτουργίες (1/x, x², √, % κλπ)
         self.numeric_buttons = []       # Κουμπιά για αριθμούς (0-9) και το δεκαδικό σημείο
         self.ac_buttons = []            # Κουμπιά για λειτουργίες καθαρισμού (C, AC)
-
+        self.memory_buttons = []        # Κουμπιά για τη memory
         self.build_ui()  # Καλούμε τη μέθοδο για να φτιαχτεί το UI
 
 
@@ -140,7 +143,7 @@ class StandardCalculator(customtkinter.CTkFrame):   # Κληρονομούμε �
             text="",    # Αρχικά κενό, θα ενημερώνεται με πληροφορίες ή ιστορικό
             height=24,  # Το ύψος του μεσαίου label
             corner_radius=0,    # Το corner_radius του μεσαίου label (γωνίες)
-            font=("Arial", 14), # Η γραμματοσειρά του κειμένου του μεσαίου label
+            font=("Arial", 14), # Η γραμματοσειρά του κειμένου του label
             anchor="e", # Ευθυγράμμιση στα δεξιά
             wraplength=300, # Το wraplength για το μεσαίο label (μέγιστο πλάτος πριν την αλλαγή γραμμής)
             fg_color=self.theme.get("display_bg", "#000000"),  # Χρώμα φόντου, με fallback στο dark theme
@@ -238,12 +241,15 @@ class StandardCalculator(customtkinter.CTkFrame):   # Κληρονομούμε �
                         hover_color=self.theme.get("op_hover", "#8c8c8c")          # Χρώμα hover, με fallback
                     )
                     self.symbol_buttons.append(btn) # Προσθήκη του κουμπιού συμβόλου στη λίστα symbol_buttons
+
                 elif is_memory: # Αν είναι κουμπί μνήμης (mc, m+, m-, mr)
                     btn.configure(
                         fg_color=self.theme.get("top_button_bg", "#4f4f4f"),       # Χρώμα φόντου, με fallback
                         text_color=self.theme.get("top_button_text", "#ffffff"),   # Χρώμα κειμένου, με fallback
                         hover_color=self.theme.get("top_button_hover", "#6e6e6e")  # Χρώμα hover, με fallback
                     )
+                    self.memory_buttons.append(btn)
+
                 else:   # Αν είναι αριθμητικό κουμπί (0-9,.)
                     btn.configure(
                         fg_color=self.theme.get("num_button_bg", "#a6a6a6"),       # Χρώμα φόντου, με fallback
@@ -255,14 +261,22 @@ class StandardCalculator(customtkinter.CTkFrame):   # Κληρονομούμε �
                 btn.grid(row=r, column=c, columnspan=col_span, padx=4, pady=4, sticky="nsew")   # Τοποθετούμε το κουμπί στο grid layout του bottom_buttons_frame
 
                 if col_span == 2:   # Αν το κουμπί καταλαμβάνει 2 στήλες (π.χ. το "=")
-                    self.bottom_buttons_frame.columnconfigure(c + 1, weight=0)  # Η δεύτερη στήλη δεν έχει βάρος, οπότε δεν επεκτείνεται
+                    # Διορθώθηκε: Η ρύθμιση columnconfigure(c + 1, weight=0) δεν είναι απαραίτητη και μπορεί να δημιουργήσει θέματα
+                    # Εφόσον το "equal" είναι στη θέση (6, 2) με columnspan 2, καλύπτει τις στήλες 2 και 3.
+                    # Οι στήλες ήδη ρυθμίζονται στο τέλος της build_ui με weight=1.
+                    pass
 
         for i in range(7):  # Για κάθε γραμμή στο grid layout του bottom_buttons_frame
             self.bottom_buttons_frame.rowconfigure(i, weight=1) # Κάθε γραμμή έχει βάρος 1, οπότε επεκτείνεται ομοιόμορφα
         for j in range(4):
             self.bottom_buttons_frame.columnconfigure(j, weight=1)
 
-        self.apply_theme(self.theme)
+        # Αυτή η κλήση είναι σημαντική. Επειδή καλείται στην __init__ μετά την build_ui,
+        # διασφαλίζει ότι τα widgets θα έχουν τα σωστά χρώματα από την αρχή.
+        # Η ίδια η build_ui χρησιμοποιεί ήδη self.theme.get(...)
+        # Οπότε, εδώ το ξανακαλούμε για να "φρεσκάρουμε" τα πάντα με το αρχικό θέμα.
+        self.apply_theme(self.theme) # Είναι ήδη εδώ, απλά το σχολιάζω για να το θυμόμαστε.
+
 
     def get_display_value(self):
         return self.display_var.get()   # Επιστρέφει την τιμή που εμφανίζεται στο display
@@ -291,33 +305,53 @@ class StandardCalculator(customtkinter.CTkFrame):   # Κληρονομούμε �
     def apply_theme(self, theme_dict):
         # Εφαρμογή χρωμάτων σε όλα τα στοιχεία σύμφωνα με το θέμα, χρησιμοποιώντας fallback τιμές
         self.configure(fg_color=theme_dict.get("background", "#222222"))
-        self.top_buttons_frame.configure(fg_color=theme_dict.get("top_frame_bg", "#222222"))
-        self.bottom_buttons_frame.configure(fg_color=theme_dict.get("bottom_frame_bg", "#222222"))
-        self.display_container.configure(fg_color=theme_dict.get("display_bg", "#000000"))
-        self.top_display.configure(fg_color=theme_dict.get("display_bg", "#000000"))
+        if self.top_buttons_frame:
+            self.top_buttons_frame.configure(fg_color=theme_dict.get("top_frame_bg", "#222222"))
+        if self.bottom_buttons_frame:
+            self.bottom_buttons_frame.configure(fg_color=theme_dict.get("bottom_frame_bg", "#222222"))
+        if self.display_container:
+            self.display_container.configure(fg_color=theme_dict.get("display_bg", "#000000"))
+        if self.top_display:
+            self.top_display.configure(fg_color=theme_dict.get("display_bg", "#000000"))
 
-        self.display_entry.configure(
-            fg_color=theme_dict.get("display_bg", "#000000"),
-            text_color=theme_dict.get("display_text", "#00ff00")
-        )
-        self.middle_display.configure(
-            fg_color=theme_dict.get("display_bg", "#000000"),
-            text_color=theme_dict.get("display_text", "#00ff00")
-        )
-        self.manual_button.configure(
-            fg_color=theme_dict.get("manual_button_bg", "#000000"),
-            text_color=theme_dict.get("manual_button_text", "#eb7c16"),
-            hover_color=theme_dict.get("hover_manual_button", "#000000")
-        )
-        self.history_display.configure(
-            fg_color=theme_dict.get("display_bg", "#000000"),
-            text_color=theme_dict.get("display_text", "#00ff00")
-        )
-        # Εδώ απουσίαζε η ρύθμιση για το angle_mode_label, την πρόσθεσα τώρα.
-        self.angle_mode_label.configure(
-            fg_color=theme_dict.get("angle_mode_bg", "#000000"),
-            text_color=theme_dict.get("angle_mode_text", "#00ff00")
-        )
+        if self.display_entry:
+            self.display_entry.configure(
+                fg_color=theme_dict.get("display_bg", "#000000"),
+                text_color=theme_dict.get("display_text", "#00ff00")
+            )
+        if self.middle_display:
+            self.middle_display.configure(
+                fg_color=theme_dict.get("display_bg", "#000000"),
+                text_color=theme_dict.get("display_text", "#00ff00")
+            )
+        if self.manual_button:
+            self.manual_button.configure(
+                fg_color=theme_dict.get("manual_button_bg", "#000000"),
+                text_color=theme_dict.get("manual_button_text", "#eb7c16"),
+                hover_color=theme_dict.get("hover_manual_button", "#000000")
+            )
+        if self.history_display:
+            self.history_display.configure(
+                fg_color=theme_dict.get("display_bg", "#000000"),
+                text_color=theme_dict.get("display_text", "#00ff00")
+            )
+        if self.angle_mode_label:
+            self.angle_mode_label.configure( # Αυτό το κομμάτι έλειπε και το πρόσθεσα για πληρότητα
+                fg_color=theme_dict.get("angle_mode_bg", "#000000"),
+                text_color=theme_dict.get("angle_mode_text", "#00ff00")
+            )
+
+        # =========================================================================
+        # Η ΑΠΑΡΑΙΤΗΤΗ ΠΡΟΣΘΗΚΗ ΓΙΑ ΤΟ ΚΟΥΜΠΙ HISTORY_BUTTON ΕΔΩ!
+        # =========================================================================
+        if self.history_button: # Αυτό ήταν το σημείο που έλειπε
+            self.history_button.configure(
+                fg_color=theme_dict.get("manual_button_bg", "#000000"),
+                text_color=theme_dict.get("manual_button_text", "#eb7c16"),
+                hover_color=theme_dict.get("hover_manual_button", "#000000")
+            )
+        # =========================================================================
+
 
         for btn in self.symbol_buttons + self.operation_buttons:
             btn.configure(
@@ -339,6 +373,19 @@ class StandardCalculator(customtkinter.CTkFrame):   # Κληρονομούμε �
                 text_color=theme_dict.get("ac_button_text", "#ffffff"),
                 hover_color=theme_dict.get("ac_hover", "#f39c12")
             )
+
+        # κουμπιά μνήμης (memory buttons)
+        for btn in self.memory_buttons:
+            btn.configure(
+                fg_color=theme_dict.get("top_button_bg", "#4f4f4f"),
+                text_color=theme_dict.get("top_button_text", "#ffffff"),
+                hover_color=theme_dict.get("top_button_hover", "#6e6e6e")
+            )
+
+        # Επίσης, πρέπει να ενημερώσουμε και το history_handler,
+        # όπως κάναμε και στο scientificCalc.
+        if self.history_handler:
+            self.history_handler.apply_theme(theme_dict)
 
     def insert_history_expression(self, entry):
         """
